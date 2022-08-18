@@ -78,6 +78,7 @@ func (r *Reporter) startSecretsScan(req xfer.Request) xfer.Response {
 		if containerID == "" {
 			return xfer.ResponseErrorf("container_id is required")
 		}
+		fmt.Println("Scan container id:" + containerID)
 		greq = pb.FindRequest{Input: &pb.FindRequest_Container{
 			Container: &pb.Container{Id: containerID},
 		}}
@@ -93,6 +94,7 @@ func (r *Reporter) startSecretsScan(req xfer.Request) xfer.Response {
 			Image: &pb.DockerImage{Id: imageId, Name: imageName},
 		}}
 	} else if nodeType == nodeTypeHost {
+		fmt.Println("Host scan Scan Dir: " + scanDir)
 		greq = pb.FindRequest{Input: &pb.FindRequest_Path{Path: scanDir}}
 	}
 	ssClient, err := newSecretScannerClient()
