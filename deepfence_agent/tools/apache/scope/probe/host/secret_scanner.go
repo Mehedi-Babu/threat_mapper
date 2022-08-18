@@ -87,6 +87,8 @@ func (r *Reporter) startSecretsScan(req xfer.Request) xfer.Response {
 			return xfer.ResponseErrorf("image_id is required")
 		}
 		imageName := fmt.Sprintf("%s", req.ControlArgs["image_id"])
+		fmt.Println("Scan Image:" + imageName)
+		fmt.Println("Scan Image id:" + imageId)
 		greq = pb.FindRequest{Input: &pb.FindRequest_Image{
 			Image: &pb.DockerImage{Id: imageId, Name: imageName},
 		}}
@@ -141,6 +143,11 @@ func getAndPublishSecretScanResults(client pb.SecretScannerClient, req pb.FindRe
 		fmt.Println("Error in sending data to secretScanLogsIndex to mark in progress:" + err.Error())
 	}
 	res, err := client.FindSecretInfo(context.Background(), &req)
+	if err != nil {
+		fmt.Println("Error from secret scan:")
+		fmt.Println(err.Error())
+		fmt.Println(err)
+	}
 	if req.GetPath() != "" && err == nil && res != nil {
 		if scanDir == HostMountDir {
 			for _, secret := range res.Secrets {
